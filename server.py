@@ -1,24 +1,32 @@
 import os
+
 from flask import Flask, json, jsonify
 import lyricsgenius
 import requests
 import unidecode
+from flask_cors import CORS
 
 genius = lyricsgenius.Genius("toJOqCi-0052N13HZFuoK-utQWN-404ffSTVNsPXk0EPfDlKTdyvv60XL1eDxb3K")
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 port = int(os.environ.get("PORT", 5000))
 
+notSong = ["Mega Radio London", "Slov", "Duyuru", "Jingle", "Remix"]
 
 @app.route("/api")
 def hi_world():
     shoutcastRequest = requests.get('http://s10.voscast.com:10348/currentsong?sid=1')
 
-    # songTitle = unidecode.unidecode(shoutcastRequest.text)
-    songTitle = unidecode.unidecode("Kalbim Ağlama Kurtuluş Kuş & Siyam")
+    songTitle = unidecode.unidecode(shoutcastRequest.text)
+    # songTitle = unidecode.unidecode("12-Slov")
+    # songTitle = unidecode.unidecode("Kalbim Ağlama Kurtuluş Kuş & Siyam")
 
     lyrics = ""
+    artworkUrl = ""
+
+    isNotSong = any(ext in songTitle for ext in notSong)
 
     itunesResponse = requests.get('https://itunes.apple.com/search?term=' + songTitle)
 
@@ -32,6 +40,12 @@ def hi_world():
             trackName = result['trackName']
             artistName = result['artistName']
 
+            if isNotSong:
+                artworkUrl = ""
+            else:
+                artworkUrl = result['artworkUrl100']
+                artworkUrl = artworkUrl.replace('100', '600')
+
             genius.verbose = False  # Turn off status messages
             genius.remove_section_headers = True  # Remove section headers (e.g. [Chorus]) from lyrics when searching
             genius.skip_non_songs = False  # Include hits thought to be non-songs (e.g. track lists)
@@ -42,10 +56,13 @@ def hi_world():
             if song is not None:
                 if result['artistName'] == song.artist:
                     lyrics = unidecode.unidecode(song.lyrics)
+                    # fetchedLyrics = song.lyrics.replace("\n", "<br/>")
+                    # lyrics = unidecode.unidecode(fetchedLyrics)
 
     value = {
         "songTitle": songTitle,
-        "lyrics": lyrics
+        "lyrics": lyrics,
+        "artworkUrl": artworkUrl
     }
 
     response = app.response_class(
