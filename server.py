@@ -13,7 +13,7 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 port = int(os.environ.get("PORT", 5000))
 
-notSong = ["Mega Radio London", "Slov", "Duyuru", "Jingle", "Remix"]
+notSong = ["Mega Radio London", "Slov", "Duyuru", "Jingle", "Remix", "SIIR"]
 
 @app.route("/api")
 def hi_world():
