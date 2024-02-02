@@ -3,3 +3,4 @@ gunicorn==20.1.0
 requests
 lyricsgenius
 Unidecode
+flask_cors
