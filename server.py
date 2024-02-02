@@ -1,7 +1,8 @@
 import os
-from flask import Flask
+from flask import Flask, json
 import lyricsgenius
 import requests
+import unidecode
 
 genius = lyricsgenius.Genius("toJOqCi-0052N13HZFuoK-utQWN-404ffSTVNsPXk0EPfDlKTdyvv60XL1eDxb3K")
 
@@ -14,8 +15,8 @@ port = int(os.environ.get("PORT", 5000))
 def hi_world():
     shoutcastRequest = requests.get('http://s10.voscast.com:10348/currentsong?sid=1')
 
-    # songTitle = shoutcastRequest.text
-    songTitle = "Kalbim Ağlama Kurtuluş Kuş & Siyam"
+    # songTitle = unidecode.unidecode(shoutcastRequest.text)
+    songTitle = unidecode.unidecode("Kalbim Ağlama Kurtuluş Kuş & Siyam")
 
     lyrics = ""
 
@@ -31,16 +32,23 @@ def hi_world():
             trackName = result['trackName']
             artistName = result['artistName']
 
-            song = genius.search_song(title=trackName, artist=artistName, get_full_info=False)
+            genius.verbose = False  # Turn off status messages
+            genius.remove_section_headers = True  # Remove section headers (e.g. [Chorus]) from lyrics when searching
+            genius.skip_non_songs = False  # Include hits thought to be non-songs (e.g. track lists)
+            genius.excluded_terms = ["(Remix)", "(Live)"]  # Exclude songs with these words in their title
+
+            song = genius.search_song(title=trackName, artist=artistName, get_full_info=True)
 
             if song is not None:
                 if result['artistName'] == song.artist:
-                    lyrics = song.lyrics
+                    lyrics = unidecode.unidecode(song.lyrics)
 
-    return {
+    value = {
         "songTitle": songTitle,
         "lyrics": lyrics
     }
+
+    return json.dumps(value)
 
 
 if __name__ == "__main__":
