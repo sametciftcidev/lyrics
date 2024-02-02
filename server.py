@@ -1,5 +1,5 @@
 import os
-from flask import Flask, send_from_directory, render_template, redirect
+from flask import Flask
 import lyricsgenius
 import requests
 
