@@ -1,5 +1,5 @@
 import os
-from flask import Flask, json
+from flask import Flask, json, jsonify
 import lyricsgenius
 import requests
 import unidecode
@@ -48,7 +48,13 @@ def hi_world():
         "lyrics": lyrics
     }
 
-    return json.dumps(value)
+    response = app.response_class(
+        response=json.dumps(value),
+        status=200,
+        mimetype='application/json'
+    )
+
+    return response
 
 
 if __name__ == "__main__":
