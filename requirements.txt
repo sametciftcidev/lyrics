@@ -1,6 +1,6 @@
 Flask
 gunicorn==20.1.0
 requests
-git+https://github.com/ItsJustAGitHubMichealWhosGonnaSeeIt5Ppl/LyricsGenius.git@ItsJustAGitHubMichealWhosGonnaSeeIt5Ppl/issue287
+git+https://github.com/sametciftcidev/lyricsapp.git@main#egg=lyricsgenius
 Unidecode
 flask_cors
