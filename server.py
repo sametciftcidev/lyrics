@@ -7,7 +7,6 @@ import unidecode
 from flask_cors import CORS
 
 genius = lyricsgenius.Genius("mgIU1E6HvQeTBAZotm__aBP0qYDD6TvOIm-5xwuVA-scbhNa9kShRdC7c92yBdoK")
-genius._session.headers.update({'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'})
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
