@@ -4,3 +4,4 @@ requests
 git+https://github.com/sametciftcidev/lyricsapp.git@main#egg=lyricsgenius
 Unidecode
 flask_cors
+fastapi
