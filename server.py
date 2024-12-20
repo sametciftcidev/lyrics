@@ -6,7 +6,8 @@ import requests
 import unidecode
 from flask_cors import CORS
 
-genius = lyricsgenius.Genius("mgIU1E6HvQeTBAZotm__aBP0qYDD6TvOIm-5xwuVA-scbhNa9kShRdC7c92yBdoK")
+proxy = {'http': os.environ.get('IPB_HTTP', ''), 'https': os.environ.get('IPB_HTTPS', '')}
+genius = lyricsgenius.Genius("mgIU1E6HvQeTBAZotm__aBP0qYDD6TvOIm-5xwuVA-scbhNa9kShRdC7c92yBdoK", proxy=proxy)
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -19,9 +20,9 @@ notSong = ["Mega Radio London", "Slov", "Duyuru", "Jingle", "Remix", "SIIR", "ME
 def hi_world():
     shoutcastRequest = requests.get('http://s10.voscast.com:10348/currentsong?sid=1')
 
-    songTitle = unidecode.unidecode(shoutcastRequest.text)
-    # songTitle = unidecode.unidecode("Üzülmedin mi")
-    # songTitle = unidecode.unidecode("Kalbim Ağlama Kurtuluş Kuş & Siyam")
+    # songTitle = unidecode.unidecode(shoutcastRequest.text)
+    # songTitle = unidecode.unidecode("Söyleme Tan Taşçı")
+    songTitle = unidecode.unidecode("Kalbim Ağlama Kurtuluş Kuş & Siyam")
 
     lyrics = ""
     artworkUrl = ""
@@ -51,18 +52,11 @@ def hi_world():
             genius.skip_non_songs = False  # Include hits thought to be non-songs (e.g. track lists)
             genius.excluded_terms = ["(Remix)", "(Live)"]  # Exclude songs with these words in their title
 
-            songs = genius.search_songs(trackName)
+            song = genius.search_song(title=trackName, artist=artistName, get_full_info=True)
 
-            for song in songs['hits']:
-
-                if song['result']['artist_names'] == result['artistName']:
-
-                    url = song['result']['url']
-                    song_lyrics = genius.lyrics(song_url=url)
-                    lyrics = unidecode.unidecode(song_lyrics)
-
-                    break
-
+            if song is not None:
+                if result['artistName'] == song.artist:
+                    lyrics = unidecode.unidecode(song.lyrics)
                     # fetchedLyrics = song.lyrics.replace("\n", "<br/>")
                     # lyrics = unidecode.unidecode(fetchedLyrics)
 
