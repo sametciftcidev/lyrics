@@ -20,7 +20,7 @@ def hi_world():
     shoutcastRequest = requests.get('http://s10.voscast.com:10348/currentsong?sid=1')
 
     songTitle = unidecode.unidecode(shoutcastRequest.text)
-    # songTitle = unidecode.unidecode("12-Slov")
+    # songTitle = unidecode.unidecode("Üzülmedin mi")
     # songTitle = unidecode.unidecode("Kalbim Ağlama Kurtuluş Kuş & Siyam")
 
     lyrics = ""
@@ -51,11 +51,18 @@ def hi_world():
             genius.skip_non_songs = False  # Include hits thought to be non-songs (e.g. track lists)
             genius.excluded_terms = ["(Remix)", "(Live)"]  # Exclude songs with these words in their title
 
-            song = genius.search_song(title=trackName, artist=artistName, get_full_info=True)
+            songs = genius.search_songs(trackName)
 
-            if song is not None:
-                if result['artistName'] == song.artist:
-                    lyrics = unidecode.unidecode(song.lyrics)
+            for song in songs['hits']:
+
+                if song['result']['artist_names'] == result['artistName']:
+
+                    url = song['result']['url']
+                    song_lyrics = genius.lyrics(song_url=url)
+                    lyrics = unidecode.unidecode(song_lyrics)
+
+                    break
+
                     # fetchedLyrics = song.lyrics.replace("\n", "<br/>")
                     # lyrics = unidecode.unidecode(fetchedLyrics)
 
