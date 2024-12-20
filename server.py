@@ -20,9 +20,9 @@ notSong = ["Mega Radio London", "Slov", "Duyuru", "Jingle", "Remix", "SIIR", "ME
 def hi_world():
     shoutcastRequest = requests.get('http://s10.voscast.com:10348/currentsong?sid=1')
 
-    # songTitle = unidecode.unidecode(shoutcastRequest.text)
+    songTitle = unidecode.unidecode(shoutcastRequest.text)
     # songTitle = unidecode.unidecode("Söyleme Tan Taşçı")
-    songTitle = unidecode.unidecode("Kalbim Ağlama Kurtuluş Kuş & Siyam")
+    # songTitle = unidecode.unidecode("Kalbim Ağlama Kurtuluş Kuş & Siyam")
 
     lyrics = ""
     artworkUrl = ""
