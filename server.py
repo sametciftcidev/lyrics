@@ -26,7 +26,7 @@ try:
     redis_client = redis.from_url(redis_url)
     # Test the connection
     redis_client.ping()
-    print("Successfully connected to Redis")
+    print("Successfully connected to Re dis")
 except Exception as e:
     print(f"Redis connection error: {str(e)}")
     redis_client = None
