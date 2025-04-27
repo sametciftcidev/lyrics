@@ -19,19 +19,21 @@ port = int(os.environ.get("PORT", 5000))
 
 notSong = ["Mega Radio London", "Slov", "Duyuru", "Jingle", "Remix", "SIIR", "MEGA RADIO LONDON"]
 
-# Redis configuration
 redis_url = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+redis_client = None
 
 try:
     redis_client = redis.from_url(redis_url)
     # Test the connection
     redis_client.ping()
-    print("Successfully connected to Re dis")
+    print("Successfully connected to Redis")
 except Exception as e:
     print(f"Redis connection error: {str(e)}")
     redis_client = None
 
 def get_cache(key):
+    if redis_client is None:
+        return None
     try:
         data = redis_client.get(key)
         if data:
@@ -42,6 +44,8 @@ def get_cache(key):
         return None
 
 def set_cache(key, value):
+    if redis_client is None:
+        return
     try:
         redis_client.set(key, json.dumps(value))
         print(f"Cached data for {key}")
@@ -55,6 +59,7 @@ def get_lyrics_from_musixmatch(title, artist, original_title):
             data = response.json()
             lyrics = data.get('lyrics', '')
             if lyrics:
+                lyrics = unidecode.unidecode(lyrics)
                 # Cache the successful result using original title
                 cache_data = {
                     'source': 'Musixmatch',
@@ -98,7 +103,7 @@ def get_lyrics_from_youtube(title, original_title):
             lyrics = data.get('lyrics', '')
             if lyrics:
                 # Decode Unicode escape sequences
-                lyrics = lyrics.encode('utf-8').decode('unicode-escape')
+                lyrics = unidecode.unidecode(lyrics)
                 # Cache the successful result using original title
                 cache_data = {
                     'source': 'YouTube Music',
@@ -117,7 +122,8 @@ def hi_world():
         shoutcastRequest = requests.get('http://s10.voscast.com:10348/currentsong?sid=1')
         shoutcastRequest.raise_for_status()
         
-        songTitle = unidecode.unidecode(shoutcastRequest.text)
+        # songTitle = unidecode.unidecode(shoutcastRequest.text)
+        songTitle = "FERHAT GOCER-AVARE MARTILAR"
         lyrics = ""
         lyricsSource = ""
         artworkUrl = ""

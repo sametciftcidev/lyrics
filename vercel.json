@@ -11,8 +11,5 @@
         "src": "/(.*)",
         "dest": "server.py"
       }
-    ],
-    "env": {
-      "REDIS_URL": "@redis_url"
-    }
+    ]
   }
