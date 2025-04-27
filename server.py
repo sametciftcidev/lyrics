@@ -19,7 +19,7 @@ WEBSHARE_API_URL = "https://proxy.webshare.io/api/v2/proxy/list/"
 # Fallback configuration
 FALLBACK_SONG_TITLE = "Mega Radio London"
 FALLBACK_LYRICS = ""
-FALLBACK_ARTWORK = "https://example.com/default-artwork.jpg"
+FALLBACK_ARTWORK = "https://s3.gifyu.com/images/bb6mp.gif"
 
 def get_webshare_proxies():
     try:
