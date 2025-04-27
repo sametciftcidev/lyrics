@@ -122,8 +122,8 @@ def hi_world():
         shoutcastRequest = requests.get('http://s10.voscast.com:10348/currentsong?sid=1')
         shoutcastRequest.raise_for_status()
         
-        # songTitle = unidecode.unidecode(shoutcastRequest.text)
-        songTitle = "FERHAT GOCER-AVARE MARTILAR"
+        songTitle = unidecode.unidecode(shoutcastRequest.text)
+        # songTitle = "FERHAT GOCER-AVARE MARTILAR"
         lyrics = ""
         lyricsSource = ""
         artworkUrl = ""
