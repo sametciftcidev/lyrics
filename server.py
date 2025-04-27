@@ -10,8 +10,7 @@ from functools import lru_cache
 import re
 import redis
 
-proxy = {'http': os.environ.get('IPB_HTTP', ''), 'https': os.environ.get('IPB_HTTPS', '')}
-genius = lyricsgenius.Genius("mgIU1E6HvQeTBAZotm__aBP0qYDD6TvOIm-5xwuVA-scbhNa9kShRdC7c92yBdoK", proxy=proxy)
+genius = lyricsgenius.Genius("mgIU1E6HvQeTBAZotm__aBP0qYDD6TvOIm-5xwuVA-scbhNa9kShRdC7c92yBdoK")
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -22,7 +21,15 @@ notSong = ["Mega Radio London", "Slov", "Duyuru", "Jingle", "Remix", "SIIR", "ME
 
 # Redis configuration
 redis_url = os.environ.get('REDIS_URL', 'redis://localhost:6379')
-redis_client = redis.from_url(redis_url)
+
+try:
+    redis_client = redis.from_url(redis_url)
+    # Test the connection
+    redis_client.ping()
+    print("Successfully connected to Redis")
+except Exception as e:
+    print(f"Redis connection error: {str(e)}")
+    redis_client = None
 
 def get_cache(key):
     try:
